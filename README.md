@@ -40,6 +40,30 @@ The color palette in `src/app.css` under `@theme` is a warm light theme with a t
 - `"name"` in `package.json`
 - `<title>` in `index.html`
 
+## Route structure
+
+Use the **directory style** for routes. Each page gets its own folder with a `route.tsx` and a colocated `-components/` directory for page-specific components (the `-` prefix excludes them from routing).
+
+```
+src/routes/
+├── __root.tsx
+├── index/
+│   ├── route.tsx              ← /
+│   ├── -components/
+│       ├── hero.tsx
+│       ├── feature-card.tsx
+├── dashboard/
+│   ├── route.tsx              ← /dashboard (layout with <Outlet />)
+│   ├── index/
+│   │   ├── route.tsx          ← /dashboard (default content)
+│   │   ├── -components/
+│   ├── settings/
+│       ├── route.tsx          ← /dashboard/settings
+│       ├── -components/
+```
+
+This keeps every route self-contained and scales cleanly as the app grows.
+
 ## What's included
 
 - **Tailwind v4** as a Vite plugin with a full `@theme` block (colors, typography, spacing, radii, shadows)
