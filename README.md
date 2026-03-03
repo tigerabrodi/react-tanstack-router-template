@@ -40,27 +40,59 @@ The color palette in `src/app.css` under `@theme` is a warm light theme with a t
 - `"name"` in `package.json`
 - `<title>` in `index.html`
 
-## Route structure
+## Conventions
 
-Use the **directory style** for routes. Each page gets its own folder with a `route.tsx` and a colocated `-components/` directory for page-specific components (the `-` prefix excludes them from routing).
+### Path aliases — always use `@/`
+
+**Never use relative imports like `../../components/foo`.** Always use the aliases:
+
+```ts
+// GOOD
+import { Button } from '@/components/button'
+import { useAuth } from '@/lib/auth'
+import { api } from '@convex/_generated/api'
+
+// BAD — never do this
+import { Button } from '../../components/button'
+import { api } from '../../../convex/_generated/api'
+```
+
+Two aliases are preconfigured in both `tsconfig.app.json` and `vite.config.ts`:
+
+| Alias       | Maps to      | Use for                           |
+| ----------- | ------------ | --------------------------------- |
+| `@/*`       | `./src/*`    | Components, lib, icons, etc.      |
+| `@convex/*` | `./convex/*` | Convex functions, generated types |
+
+The `@convex/` alias is harmless if you don't use Convex — it simply won't resolve to anything.
+
+### Route structure — always use folders, never flat files
+
+**Every route is a folder with a `route.tsx` file.** Never use the flat dot-separated naming (`_auth.dashboard.settings.tsx`). The only exception is `__root.tsx` which stays flat per TanStack Router convention.
+
+Page-specific components go in a `-components/` directory next to `route.tsx`. The `-` prefix tells TanStack Router to ignore the directory.
 
 ```
 src/routes/
-├── __root.tsx
+├── __root.tsx                        ← only file that stays flat
 ├── index/
-│   ├── route.tsx              ← /
-│   ├── -components/
+│   ├── route.tsx                     ← /
+│   └── -components/
 │       ├── hero.tsx
-│       ├── feature-card.tsx
+│       └── feature-card.tsx
 ├── dashboard/
-│   ├── route.tsx              ← /dashboard (layout with <Outlet />)
+│   ├── route.tsx                     ← /dashboard (layout with <Outlet />)
 │   ├── index/
-│   │   ├── route.tsx          ← /dashboard (default content)
-│   │   ├── -components/
-│   ├── settings/
-│       ├── route.tsx          ← /dashboard/settings
-│       ├── -components/
+│   │   ├── route.tsx                 ← /dashboard (default content)
+│   │   └── -components/
+│   └── settings/
+│       ├── route.tsx                 ← /dashboard/settings
+│       └── -components/
 ```
+
+**Layout routes** (routes that wrap children with `<Outlet />`) get their own folder with a `route.tsx`. Pathless layout routes use the `_prefix` convention: `_authenticated/route.tsx` creates a layout that doesn't add a URL segment.
+
+**Path grouping folders** (like `workspaces/` containing `index/` and `$workspaceId/`) don't need their own `route.tsx` — they're just organizational folders.
 
 This keeps every route self-contained and scales cleanly as the app grows.
 
