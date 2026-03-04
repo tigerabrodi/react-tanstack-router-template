@@ -41,7 +41,7 @@ Ships with **Fraunces** (display) and **DM Sans** (body). To swap them:
 
 ### Colors
 
-The `@theme` block in `src/app.css` has a warm light palette with a terracotta accent. Replace the `--color-*` variables with your own. The shadow values also reference warm tones via `rgba(45, 42, 38, ...)` — update those if your base tone changes.
+The `@theme` block in `src/app.css` has placeholder colors — a warm light palette with a terracotta accent (`#c45d3e`). Replace all the `--color-*` variables with your own project's palette. The shadow values also use `rgba(45, 42, 38, ...)` which matches the warm base — update those too if your tone changes.
 
 ### Convex
 
