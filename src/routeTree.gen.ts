@@ -9,7 +9,6 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as AuthRouteRouteImport } from './routes/auth/route'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteRouteImport } from './routes/index/route'
 import { Route as AuthenticatedDashboardRouteRouteImport } from './routes/_authenticated/dashboard/route'
@@ -17,11 +16,6 @@ import { Route as AuthenticatedAdminRouteRouteImport } from './routes/_authentic
 import { Route as AuthenticatedAdminAdminUsersRouteRouteImport } from './routes/_authenticated/_admin/admin/users/route'
 import { Route as AuthenticatedAdminAdminComponentsRouteRouteImport } from './routes/_authenticated/_admin/admin/components/route'
 
-const AuthRouteRoute = AuthRouteRouteImport.update({
-  id: '/auth',
-  path: '/auth',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
   id: '/_authenticated',
   getParentRoute: () => rootRouteImport,
@@ -56,14 +50,12 @@ const AuthenticatedAdminAdminComponentsRouteRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof AuthenticatedAdminRouteRouteWithChildren
-  '/auth': typeof AuthRouteRoute
   '/dashboard': typeof AuthenticatedDashboardRouteRoute
   '/admin/components': typeof AuthenticatedAdminAdminComponentsRouteRoute
   '/admin/users': typeof AuthenticatedAdminAdminUsersRouteRoute
 }
 export interface FileRoutesByTo {
   '/': typeof AuthenticatedAdminRouteRouteWithChildren
-  '/auth': typeof AuthRouteRoute
   '/dashboard': typeof AuthenticatedDashboardRouteRoute
   '/admin/components': typeof AuthenticatedAdminAdminComponentsRouteRoute
   '/admin/users': typeof AuthenticatedAdminAdminUsersRouteRoute
@@ -72,7 +64,6 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRouteRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
-  '/auth': typeof AuthRouteRoute
   '/_authenticated/_admin': typeof AuthenticatedAdminRouteRouteWithChildren
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRouteRoute
   '/_authenticated/_admin/admin/components': typeof AuthenticatedAdminAdminComponentsRouteRoute
@@ -80,14 +71,13 @@ export interface FileRoutesById {
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/auth' | '/dashboard' | '/admin/components' | '/admin/users'
+  fullPaths: '/' | '/dashboard' | '/admin/components' | '/admin/users'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/auth' | '/dashboard' | '/admin/components' | '/admin/users'
+  to: '/' | '/dashboard' | '/admin/components' | '/admin/users'
   id:
     | '__root__'
     | '/'
     | '/_authenticated'
-    | '/auth'
     | '/_authenticated/_admin'
     | '/_authenticated/dashboard'
     | '/_authenticated/_admin/admin/components'
@@ -97,18 +87,10 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRouteRoute: typeof IndexRouteRoute
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
-  AuthRouteRoute: typeof AuthRouteRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/auth': {
-      id: '/auth'
-      path: '/auth'
-      fullPath: '/auth'
-      preLoaderRoute: typeof AuthRouteRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/_authenticated': {
       id: '/_authenticated'
       path: ''
@@ -188,7 +170,6 @@ const AuthenticatedRouteRouteWithChildren =
 const rootRouteChildren: RootRouteChildren = {
   IndexRouteRoute: IndexRouteRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
-  AuthRouteRoute: AuthRouteRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

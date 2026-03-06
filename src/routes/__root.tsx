@@ -22,7 +22,7 @@ function RootLayout() {
   }
 
   // CUSTOMIZE: Change '/dashboard' to your app's main authenticated route
-  if (currentUser && (pathname === '/' || pathname === '/auth')) {
+  if (currentUser && pathname === '/') {
     return <Navigate to="/dashboard" />
   }
 

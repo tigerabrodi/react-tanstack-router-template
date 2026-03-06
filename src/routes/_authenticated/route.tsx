@@ -15,7 +15,7 @@ function AuthenticatedRoute() {
   }
 
   if (currentUser === null) {
-    return <Navigate to="/auth" />
+    return <Navigate to="/" />
   }
 
   return (

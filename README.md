@@ -38,11 +38,11 @@ bun run dev             # start Vite dev server (separate terminal)
 ## Auth flow
 
 ```
-Landing (/) --> /auth --> Google OAuth --> /dashboard
+Landing (/) --> Google OAuth --> /dashboard
 ```
 
-- Authenticated users visiting `/` or `/auth` are redirected to `/dashboard`
-- Unauthenticated users visiting `/dashboard` are redirected to `/auth`
+- Authenticated users visiting `/` are redirected to `/dashboard`
+- Unauthenticated users visiting `/dashboard` are redirected to `/`
 - Admin pages require `isAdmin: true` on the user record
 
 ## Route structure
@@ -50,8 +50,7 @@ Landing (/) --> /auth --> Google OAuth --> /dashboard
 ```
 src/routes/
 ├── __root.tsx                          # Auth loading + smart redirects
-├── index/route.tsx                     # Landing page (/)
-├── auth/route.tsx                      # Google sign-in (/auth)
+├── index/route.tsx                     # Landing page + Google sign-in (/)
 ├── _authenticated/
 │   ├── route.tsx                       # Auth guard + CurrentUserProvider
 │   ├── dashboard/route.tsx             # Main app page (/dashboard)
