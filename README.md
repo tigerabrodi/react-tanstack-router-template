@@ -14,26 +14,38 @@ bun run dev             # start Vite dev server (separate terminal)
 
 1. Go to [Google Cloud Console](https://console.cloud.google.com/apis/credentials) and create an OAuth 2.0 Client ID
 2. Add this as an authorized redirect URI: `{CONVEX_SITE_URL}/api/auth/callback/google`
-   - Find your `CONVEX_SITE_URL` in the [Convex dashboard](https://dashboard.convex.dev) under your project's settings (it ends in `.convex.site`)
-3. In the Convex dashboard, go to **Settings > Environment Variables** and add:
+   - Your `CONVEX_SITE_URL` is printed when you run `npx convex dev` (ends in `.convex.site`)
+3. Set your env vars:
 
-| Variable             | Value                           |
-| -------------------- | ------------------------------- |
-| `AUTH_GOOGLE_ID`     | Your Google OAuth client ID     |
-| `AUTH_GOOGLE_SECRET` | Your Google OAuth client secret |
-| `IS_DEV`             | `true`                          |
+```bash
+# Dev
+npx convex env set AUTH_GOOGLE_ID your-client-id
+npx convex env set AUTH_GOOGLE_SECRET your-client-secret
+npx convex env set IS_DEV true
+```
 
-`IS_DEV=true` makes every new user an admin automatically, so you can access the admin panel during development. Remove it in production.
+`IS_DEV=true` makes every new user an admin automatically so you can access the admin panel during development. Don't set it in production.
+
+### Production env vars
+
+```bash
+npx convex env set --prod AUTH_GOOGLE_ID your-client-id
+npx convex env set --prod AUTH_GOOGLE_SECRET your-client-secret
+npx convex env set --prod SITE_URL https://your-domain.com
+```
+
+`SITE_URL` must be set in production so Convex auth knows where to redirect back to.
 
 ## Environment variables
 
-| Variable             | Source           | Description                        |
-| -------------------- | ---------------- | ---------------------------------- |
-| `CONVEX_DEPLOYMENT`  | `npx convex dev` | Auto-created in `.env.local`       |
-| `VITE_CONVEX_URL`    | `npx convex dev` | Auto-created in `.env.local`       |
-| `AUTH_GOOGLE_ID`     | Convex dashboard | Google OAuth client ID             |
-| `AUTH_GOOGLE_SECRET` | Convex dashboard | Google OAuth client secret         |
-| `IS_DEV`             | Convex dashboard | Set to `true` for dev admin access |
+| Variable             | How to set                       | Description                        |
+| -------------------- | -------------------------------- | ---------------------------------- |
+| `CONVEX_DEPLOYMENT`  | Auto-created by `npx convex dev` | Written to `.env.local`            |
+| `VITE_CONVEX_URL`    | Auto-created by `npx convex dev` | Written to `.env.local`            |
+| `AUTH_GOOGLE_ID`     | `npx convex env set`             | Google OAuth client ID             |
+| `AUTH_GOOGLE_SECRET` | `npx convex env set`             | Google OAuth client secret         |
+| `IS_DEV`             | `npx convex env set`             | Set to `true` for dev admin access |
+| `SITE_URL`           | `npx convex env set --prod`      | Your production domain (prod only) |
 
 ## Auth flow
 
@@ -122,10 +134,9 @@ Page-specific components go in a `-components/` directory next to `route.tsx`. T
 
 1. Go to the [Convex dashboard](https://dashboard.convex.dev) > your project > **Settings**
 2. Click **"Generate Production Deploy Key"** and copy it
-3. In Vercel > your project > **Settings** > **Environment Variables**, add:
-   - `CONVEX_DEPLOY_KEY` (Production only)
-   - `AUTH_GOOGLE_ID` and `AUTH_GOOGLE_SECRET` (Production only)
-4. Push to main — Vercel will deploy Convex functions and build the frontend in one step
+3. In Vercel > your project > **Settings** > **Environment Variables**, add `CONVEX_DEPLOY_KEY` (Production only)
+4. Set production env vars via CLI (see [Production env vars](#production-env-vars) above)
+5. Push to main — Vercel will deploy Convex functions and build the frontend in one step
 
 ## What's included
 
