@@ -1,15 +1,79 @@
-# React + Convex Template
+# React + Convex Auth Template
 
-My personal starter for quickly spinning up side projects. Opinionated defaults I reach for every time: Vite, React, TypeScript, TanStack Router, Tailwind v4, and Convex.
+Personal starter for side projects with auth already wired up. Clone it, configure Google OAuth, and start building.
 
 ## Quick start
 
 ```bash
 bun install
-bun run dev
+npx convex dev          # creates .env.local with CONVEX_DEPLOYMENT and VITE_CONVEX_URL
+bun run dev             # start Vite dev server (separate terminal)
 ```
 
-For Convex, run `npx convex dev` in a separate terminal.
+### Google OAuth setup
+
+1. Go to [Google Cloud Console](https://console.cloud.google.com/apis/credentials) and create an OAuth 2.0 Client ID
+2. Add this as an authorized redirect URI: `{CONVEX_SITE_URL}/api/auth/callback/google`
+   - Find your `CONVEX_SITE_URL` in the [Convex dashboard](https://dashboard.convex.dev) under your project's settings (it ends in `.convex.site`)
+3. In the Convex dashboard, go to **Settings > Environment Variables** and add:
+
+| Variable             | Value                           |
+| -------------------- | ------------------------------- |
+| `AUTH_GOOGLE_ID`     | Your Google OAuth client ID     |
+| `AUTH_GOOGLE_SECRET` | Your Google OAuth client secret |
+| `IS_DEV`             | `true`                          |
+
+`IS_DEV=true` makes every new user an admin automatically, so you can access the admin panel during development. Remove it in production.
+
+## Environment variables
+
+| Variable             | Source           | Description                        |
+| -------------------- | ---------------- | ---------------------------------- |
+| `CONVEX_DEPLOYMENT`  | `npx convex dev` | Auto-created in `.env.local`       |
+| `VITE_CONVEX_URL`    | `npx convex dev` | Auto-created in `.env.local`       |
+| `AUTH_GOOGLE_ID`     | Convex dashboard | Google OAuth client ID             |
+| `AUTH_GOOGLE_SECRET` | Convex dashboard | Google OAuth client secret         |
+| `IS_DEV`             | Convex dashboard | Set to `true` for dev admin access |
+
+## Auth flow
+
+```
+Landing (/) --> /auth --> Google OAuth --> /dashboard
+```
+
+- Authenticated users visiting `/` or `/auth` are redirected to `/dashboard`
+- Unauthenticated users visiting `/dashboard` are redirected to `/auth`
+- Admin pages require `isAdmin: true` on the user record
+
+## Route structure
+
+```
+src/routes/
+├── __root.tsx                          # Auth loading + smart redirects
+├── index/route.tsx                     # Landing page (/)
+├── auth/route.tsx                      # Google sign-in (/auth)
+├── _authenticated/
+│   ├── route.tsx                       # Auth guard + CurrentUserProvider
+│   ├── dashboard/route.tsx             # Main app page (/dashboard)
+│   └── _admin/
+│       ├── route.tsx                   # Admin guard + nav header
+│       └── admin/
+│           ├── components/route.tsx    # Loading component showcase (/admin/components)
+│           └── users/route.tsx         # Clear-all-users utility (/admin/users)
+```
+
+## What to customize
+
+Search for `// CUSTOMIZE:` comments across the codebase. Key swap points:
+
+- **Project name**: `package.json`, `index.html`, dashboard header, admin header
+- **Fonts**: `src/main.tsx` imports, `src/app.css` theme, `src/declarations.d.ts`
+- **Colors**: `src/app.css` `@theme` block
+- **Auth provider**: `convex/auth.ts` (swap Google for GitHub, etc.)
+- **Main route**: Replace `/dashboard` with your app's primary route
+- **Schema**: `convex/schema.ts` — add your app's tables and user fields
+- **Admin nav**: `src/routes/_authenticated/_admin/route.tsx`
+- **Loading animation**: `src/components/loading-screen.tsx`
 
 ## Scripts
 
@@ -21,67 +85,6 @@ For Convex, run `npx convex dev` in a separate terminal.
 | `bun run tsc`    | Type-check only               |
 | `bun run test`   | Run tests with Vitest         |
 | `bun run format` | Format with Prettier          |
-
-## What to customize for your project
-
-### Project name
-
-- `"name"` in `package.json`
-- `<title>` in `index.html`
-
-### Fonts
-
-Ships with **Fraunces** (display) and **DM Sans** (body). To swap them:
-
-1. `bun add @fontsource-variable/<name>`
-2. `bun remove @fontsource-variable/fraunces @fontsource-variable/dm-sans`
-3. Update imports in `src/main.tsx`
-4. Update module declarations in `src/declarations.d.ts`
-5. Update `--font-display` and `--font-body` in `src/app.css`
-
-### Colors
-
-The `@theme` block in `src/app.css` has placeholder colors — a warm light palette with a terracotta accent (`#c45d3e`). Replace all the `--color-*` variables with your own project's palette. The shadow values also use `rgba(45, 42, 38, ...)` which matches the warm base — update those too if your tone changes.
-
-### Convex
-
-The template is wired up for Convex out of the box:
-
-- `@convex/*` path alias in `tsconfig.app.json` and `vite.config.ts`
-- `vitest.config.ts` mirrors the same aliases so tests resolve correctly
-- `vercel.json` uses `npx convex deploy --cmd 'bun run build'` as the build command
-
-**If you're using Convex:** add your `convex/` directory, run `npx convex init`, and you're good to go.
-
-**If you're not using Convex:** the aliases are harmless — they just won't resolve to anything. You can remove them from `tsconfig.app.json`, `vite.config.ts`, and `vitest.config.ts` if you want a clean setup. Also update the `buildCommand` in `vercel.json` to just `bun run build`.
-
-### Vercel
-
-`vercel.json` is preconfigured with:
-
-- `installCommand`: `bun install`
-- `buildCommand`: `npx convex deploy --cmd 'bun run build'` (deploys Convex functions + builds the frontend)
-- SPA rewrites so client-side routing works on all paths
-
-If not using Convex, change `buildCommand` to `bun run build`.
-
-#### Production deploy with Convex
-
-To deploy Convex functions automatically when Vercel builds:
-
-1. Go to the [Convex dashboard](https://dashboard.convex.dev) > your project > **Settings**
-2. Click **"Generate Production Deploy Key"** and copy it
-3. In Vercel > your project > **Settings** > **Environment Variables**, add:
-   - Name: `CONVEX_DEPLOY_KEY`
-   - Value: the key you just copied
-   - Environment: **Production only** (uncheck Preview and Development)
-4. Push to main — Vercel will deploy your Convex functions and build the frontend in one step
-
-The `npx convex deploy` command in `vercel.json` reads this key and automatically sets `VITE_CONVEX_URL` during the build, so you don't need to configure that separately.
-
-### Meta tags
-
-`index.html` is bare — add your own `og:image`, `og:title`, `twitter:card`, favicon, etc. before shipping.
 
 ## Conventions
 
@@ -106,30 +109,34 @@ Every route is a folder with a `route.tsx`. Never use the flat dot-separated nam
 
 Page-specific components go in a `-components/` directory next to `route.tsx`. The `-` prefix tells TanStack Router to ignore it.
 
-```
-src/routes/
-├── __root.tsx
-├── index/
-│   ├── route.tsx
-│   └── -components/
-│       └── hero.tsx
-├── dashboard/
-│   ├── route.tsx              ← layout with <Outlet />
-│   ├── index/
-│   │   └── route.tsx          ← /dashboard
-│   └── settings/
-│       ├── route.tsx          ← /dashboard/settings
-│       └── -components/
-```
-
 **Layout routes** use `_prefix` for pathless layouts: `_authenticated/route.tsx` wraps children without adding a URL segment.
+
+## Vercel
+
+`vercel.json` is preconfigured with:
+
+- `installCommand`: `bun install`
+- `buildCommand`: `npx convex deploy --cmd 'bun run build'` (deploys Convex functions + builds the frontend)
+- SPA rewrites so client-side routing works on all paths
+
+### Production deploy with Convex
+
+1. Go to the [Convex dashboard](https://dashboard.convex.dev) > your project > **Settings**
+2. Click **"Generate Production Deploy Key"** and copy it
+3. In Vercel > your project > **Settings** > **Environment Variables**, add:
+   - `CONVEX_DEPLOY_KEY` (Production only)
+   - `AUTH_GOOGLE_ID` and `AUTH_GOOGLE_SECRET` (Production only)
+4. Push to main — Vercel will deploy Convex functions and build the frontend in one step
 
 ## What's included
 
 - **Vite** with React plugin and auto code-splitting
 - **Tailwind v4** as a Vite plugin with a full `@theme` block
 - **TanStack Router** with file-based routing
+- **Convex** with `@convex-dev/auth` (Google OAuth)
+- **motion** for loading animations
 - **Vitest** for testing with path aliases matching the app
 - **ESLint** with type-checked rules
 - **Prettier** with Tailwind class sorting
 - **Vercel** config with bun + Convex deploy + SPA rewrites
+- **Admin tooling** — component playground + user wipe utility

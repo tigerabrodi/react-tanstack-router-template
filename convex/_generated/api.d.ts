@@ -8,13 +8,25 @@
  * @module
  */
 
+import type * as admin_mutations from "../admin/mutations.js";
+import type * as admin_queries from "../admin/queries.js";
+import type * as auth from "../auth.js";
+import type * as http from "../http.js";
+import type * as users_queries from "../users/queries.js";
+
 import type {
   ApiFromModules,
   FilterApi,
   FunctionReference,
 } from "convex/server";
 
-declare const fullApi: ApiFromModules<{}>;
+declare const fullApi: ApiFromModules<{
+  "admin/mutations": typeof admin_mutations;
+  "admin/queries": typeof admin_queries;
+  auth: typeof auth;
+  http: typeof http;
+  "users/queries": typeof users_queries;
+}>;
 
 /**
  * A utility for referencing Convex functions in your app's public API.
