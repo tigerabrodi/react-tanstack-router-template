@@ -151,7 +151,7 @@ const AuthenticatedAdminRouteRouteChildren: AuthenticatedAdminRouteRouteChildren
 
 const AuthenticatedAdminRouteRouteWithChildren =
   AuthenticatedAdminRouteRoute._addFileChildren(
-    AuthenticatedAdminRouteRouteChildren,
+    AuthenticatedAdminRouteRouteChildren
   )
 
 interface AuthenticatedRouteRouteChildren {
