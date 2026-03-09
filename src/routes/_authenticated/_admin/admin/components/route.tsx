@@ -1,11 +1,11 @@
 import { LoadingComponentsShowcase } from './-components/loading'
 import { createFileRoute } from '@tanstack/react-router'
 
-export const Route = createFileRoute(
-  '/_authenticated/_admin/admin/components'
-)({
-  component: AdminComponentsPage,
-})
+export const Route = createFileRoute('/_authenticated/_admin/admin/components')(
+  {
+    component: AdminComponentsPage,
+  }
+)
 
 function AdminComponentsPage() {
   return (

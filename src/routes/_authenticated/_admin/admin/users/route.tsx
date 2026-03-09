@@ -84,7 +84,7 @@ function AdminUsersPage() {
             type="button"
             disabled={isClearing}
             onClick={() => void handleClearAllUsers()}
-            className="font-body bg-accent w-full cursor-pointer rounded-md px-5 py-3 text-[15px] leading-[18px] font-medium text-white transition-colors hover:bg-accent-hover disabled:cursor-default disabled:opacity-50 md:w-auto"
+            className="font-body bg-accent hover:bg-accent-hover w-full cursor-pointer rounded-md px-5 py-3 text-[15px] leading-[18px] font-medium text-white transition-colors disabled:cursor-default disabled:opacity-50 md:w-auto"
           >
             {isClearing ? 'Clearing users...' : 'Clear all users'}
           </button>

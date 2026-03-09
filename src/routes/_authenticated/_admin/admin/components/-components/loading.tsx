@@ -1,4 +1,4 @@
-import { motion, useReducedMotion } from 'motion/react'
+import { motion } from 'motion/react'
 import type { ReactNode } from 'react'
 import { useState } from 'react'
 
@@ -59,20 +59,14 @@ function PreviewStage({
 }
 
 function LoadingVariationSpinner() {
-  const shouldReduceMotion = useReducedMotion()
-
   return (
     <motion.div
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={
-        shouldReduceMotion
-          ? { duration: 0.24, ease: 'easeOut' }
-          : {
-              opacity: { duration: 0.4, ease: 'easeOut' },
-              y: { duration: 0.65, ease: [0.22, 1, 0.36, 1] },
-            }
-      }
+      transition={{
+        opacity: { duration: 0.4, ease: 'easeOut' },
+        y: { duration: 0.65, ease: [0.22, 1, 0.36, 1] },
+      }}
     >
       <div className="border-border border-t-accent h-10 w-10 animate-spin rounded-full border-2" />
     </motion.div>
@@ -80,8 +74,6 @@ function LoadingVariationSpinner() {
 }
 
 function LoadingVariationPulseDots() {
-  const shouldReduceMotion = useReducedMotion()
-
   return (
     <div className="flex items-center gap-2">
       {[0, 1, 2].map((i) => (
@@ -89,21 +81,13 @@ function LoadingVariationPulseDots() {
           key={i}
           className="bg-accent h-2.5 w-2.5 rounded-full"
           initial={{ scale: 0.6, opacity: 0.4 }}
-          animate={
-            shouldReduceMotion
-              ? { scale: 1, opacity: 1 }
-              : { scale: [0.6, 1, 0.6], opacity: [0.4, 1, 0.4] }
-          }
-          transition={
-            shouldReduceMotion
-              ? { duration: 0.24, ease: 'easeOut' }
-              : {
-                  duration: 1.2,
-                  ease: 'easeInOut',
-                  repeat: Infinity,
-                  delay: i * 0.15,
-                }
-          }
+          animate={{ scale: [0.6, 1, 0.6], opacity: [0.4, 1, 0.4] }}
+          transition={{
+            duration: 1.2,
+            ease: 'easeInOut',
+            repeat: Infinity,
+            delay: i * 0.15,
+          }}
         />
       ))}
     </div>
@@ -111,23 +95,16 @@ function LoadingVariationPulseDots() {
 }
 
 function LoadingVariationAccentBar() {
-  const shouldReduceMotion = useReducedMotion()
-
   return (
     <div className="bg-border h-1 w-48 overflow-hidden rounded-full">
       <motion.div
         className="bg-accent h-full rounded-full"
         initial={{ width: '0%', x: 0 }}
-        animate={
-          shouldReduceMotion
-            ? { width: '100%' }
-            : { width: ['0%', '60%', '100%', '60%', '0%'], x: ['0%', '0%', '0%', '40%', '100%'] }
-        }
-        transition={
-          shouldReduceMotion
-            ? { duration: 0.24, ease: 'easeOut' }
-            : { duration: 2, ease: 'easeInOut', repeat: Infinity }
-        }
+        animate={{
+          width: ['0%', '60%', '100%', '60%', '0%'],
+          x: ['0%', '0%', '0%', '40%', '100%'],
+        }}
+        transition={{ duration: 2, ease: 'easeInOut', repeat: Infinity }}
       />
     </div>
   )
