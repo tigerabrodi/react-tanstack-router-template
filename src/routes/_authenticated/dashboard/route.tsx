@@ -24,7 +24,7 @@ function DashboardPage() {
             </span>
             <button
               onClick={() => void signOut()}
-              className="text-text-secondary font-body hover:text-text-primary cursor-pointer text-small transition-colors"
+              className="text-text-secondary font-body hover:text-text-primary text-small cursor-pointer transition-colors"
             >
               Sign out
             </button>
@@ -44,7 +44,7 @@ function DashboardPage() {
           {currentUser.isAdmin && (
             <Link
               to="/admin/components"
-              className="text-accent font-body hover:text-accent-hover w-fit text-body transition-colors"
+              className="text-accent font-body hover:text-accent-hover text-body w-fit transition-colors"
             >
               Admin panel
             </Link>

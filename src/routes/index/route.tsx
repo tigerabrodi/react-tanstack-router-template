@@ -35,9 +35,7 @@ function HomePage() {
   return (
     <div className="bg-bg flex min-h-screen flex-col items-center justify-center gap-7 px-5">
       <div className="flex flex-col items-center gap-3">
-        <h1 className="font-display text-text-primary text-display">
-          My App
-        </h1>
+        <h1 className="font-display text-text-primary text-display">My App</h1>
         <p className="text-text-secondary font-body text-body">
           Your next side project starts here.
         </p>
