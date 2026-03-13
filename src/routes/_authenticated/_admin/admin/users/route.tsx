@@ -3,6 +3,7 @@ import { createFileRoute } from '@tanstack/react-router'
 import { api } from '@convex/_generated/api'
 import { useMutation } from 'convex/react'
 import { useState } from 'react'
+import { getConvexErrorMessage } from '@/lib/convex-error'
 
 export const Route = createFileRoute('/_authenticated/_admin/admin/users')({
   component: AdminUsersPage,
@@ -45,9 +46,7 @@ function AdminUsersPage() {
 
       window.location.href = '/'
     } catch (error) {
-      setStatus(
-        error instanceof Error ? error.message : 'Failed to clear all users'
-      )
+      setStatus(getConvexErrorMessage(error))
       setIsClearing(false)
     }
   }

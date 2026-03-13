@@ -1,5 +1,6 @@
 import { getAuthUserId } from '@convex-dev/auth/server'
 import { mutation } from '../_generated/server'
+import { appError } from '../shared/errors'
 
 export const clearAllUsers = mutation({
   args: {},
@@ -7,13 +8,19 @@ export const clearAllUsers = mutation({
     const userId = await getAuthUserId(ctx)
 
     if (!userId) {
-      throw new Error('User not authenticated')
+      throw appError({
+        code: 'NOT_AUTHENTICATED',
+        message: 'User not authenticated',
+      })
     }
 
     const user = await ctx.db.get(userId)
 
     if (!user?.isAdmin) {
-      throw new Error('You do not have admin access')
+      throw appError({
+        code: 'NOT_AUTHORIZED',
+        message: 'You do not have admin access',
+      })
     }
 
     // CUSTOMIZE: Add deletion of your app-specific tables here
