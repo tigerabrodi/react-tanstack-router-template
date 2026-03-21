@@ -1,5 +1,5 @@
-import { LoadingComponentsShowcase } from './-components/loading'
 import { createFileRoute } from '@tanstack/react-router'
+import { LoadingComponentsShowcase } from './-components/loading'
 
 export const Route = createFileRoute('/_authenticated/_admin/admin/components')(
   {
