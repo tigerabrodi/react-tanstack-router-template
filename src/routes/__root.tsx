@@ -1,4 +1,5 @@
 import { LoadingScreen } from '@/components/loading-screen'
+import { Toaster } from '@/components/sonner'
 import { api } from '@convex/_generated/api'
 import {
   createRootRoute,
@@ -26,5 +27,10 @@ function RootLayout() {
     return <Navigate to="/dashboard" />
   }
 
-  return <Outlet />
+  return (
+    <>
+      <Outlet />
+      <Toaster />
+    </>
+  )
 }
