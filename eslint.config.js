@@ -24,7 +24,7 @@ export default defineConfig([
       },
     },
     rules: {
-      'max-lines': ['error', { max: 1500, skipBlankLines: true, skipComments: true }],
+      'max-lines': ['error', { max: 800, skipBlankLines: true, skipComments: true }],
       'no-await-in-loop': 'error',
       'no-nested-ternary': 'error',
       '@typescript-eslint/no-misused-promises': 'off',
