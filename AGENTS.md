@@ -22,6 +22,8 @@ convex/
 
 Each domain folder contains `queries.ts`, `mutations.ts`, and `actions.ts` as needed. On the client, consumers call these via the nested API: `api.users.queries.{queryName}`, `api.users.mutations.{mutationName}`, etc.
 
+Convex module filenames must use only letters, numbers, underscores, or periods. Never add hyphens to any file under `convex/`; use underscore names like `schema_core_tables.ts` and `query_planner.ts`.
+
 ## After completing work
 
 Run all three checks after each plan is implemented:
@@ -43,6 +45,42 @@ function getUser({ id }: { id: string }) { ... }
 // Bad
 function getUser(id: string) { ... }
 ```
+
+## Styling and layout conventions
+
+- For conditional classes with `cn`, always use object syntax for the conditional part. Do not use ternaries or `&&` chains to toggle class names inline.
+
+```ts
+// Good
+cn('base-class', {
+  'is-active': isActive,
+  'is-disabled': isDisabled,
+})
+
+// Bad
+cn('base-class', isActive && 'is-active', isDisabled ? 'is-disabled' : '')
+```
+
+- Never use Tailwind's `inline-flex` class. Use `flex` and structure the container correctly instead.
+- When using `flex-1`, pair it with `min-w-0` for horizontal layouts or `min-h-0` for vertical layouts so the element can actually shrink and stay responsive.
+
+## Framer Motion collapse
+
+When animating a collapsible element inside a flex container with `gap`, do not animate only `height` or `width`. The exiting element remains a flex child during `AnimatePresence`, so the parent gap still applies and causes a visible flicker.
+
+Animate the margin on the collapsing axis alongside the size so it cancels the parent gap during enter and exit:
+
+```tsx
+<motion.div
+  initial={{ height: 0, opacity: 0, marginTop: -40, filter: 'blur(8px)' }}
+  animate={{ height: 'auto', opacity: 1, marginTop: 0, filter: 'blur(0px)' }}
+  exit={{ height: 0, opacity: 0, marginTop: -40, filter: 'blur(8px)' }}
+  transition={{ duration: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }}
+  style={{ overflow: 'hidden' }}
+/>
+```
+
+Match the negative margin to the parent gap value. Use `marginTop`/`marginBottom` for vertical collapse or `marginLeft`/`marginRight` for horizontal collapse, depending on the layout direction.
 
 ## Async patterns
 
