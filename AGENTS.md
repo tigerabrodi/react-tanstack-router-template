@@ -4,6 +4,8 @@
 
 Only write unit tests (Vitest) for pure functions that do calculation or parsing — where input transforms into output and tests add real value. No unit tests for UI components or side-effectful code.
 
+Follow TDD for pure functions: write the test first, run it to confirm it fails, then write the implementation, then run the test again to confirm it passes. The fail-then-pass cycle must happen.
+
 ## Convex folder structure
 
 Convex functions are organized by domain in folders under `convex/`:
@@ -48,6 +50,7 @@ function getUser(id: string) { ... }
 
 ## Styling and layout conventions
 
+- Never use Tailwind's `space-x-*` or `space-y-*` utilities. Use `flex gap-*` for horizontal layouts or `flex flex-col gap-*` for vertical layouts instead. If you encounter existing `space-x` or `space-y` usage, refactor it to proper flex with gap.
 - For conditional classes with `cn`, always use object syntax for the conditional part. Do not use ternaries or `&&` chains to toggle class names inline.
 
 ```ts
@@ -63,6 +66,14 @@ cn('base-class', isActive && 'is-active', isDisabled ? 'is-disabled' : '')
 
 - Never use Tailwind's `inline-flex` class. Use `flex` and structure the container correctly instead.
 - When using `flex-1`, pair it with `min-w-0` for horizontal layouts or `min-h-0` for vertical layouts so the element can actually shrink and stay responsive.
+
+## Icons
+
+Icons must live in their own dedicated `.tsx` files. Never inline SVG icons inside component or page files.
+
+## JSX cleanliness
+
+When passing function props to components, extract the handler into its own `useCallback` or named function rather than inlining multi-line logic in JSX. The JSX should read like a clean list of prop assignments. Simple one-liner references (like `onPause={pausePlayback}`) are fine inline.
 
 ## Framer Motion collapse
 
@@ -126,9 +137,13 @@ const deleteItem = useMutation(api.items.remove).withOptimisticUpdate(
   (localStore, { id }) => {
     const items = localStore.getQuery(api.items.list, {})
     if (items !== undefined) {
-      localStore.setQuery(api.items.list, {}, items.filter((i) => i._id !== id))
+      localStore.setQuery(
+        api.items.list,
+        {},
+        items.filter((i) => i._id !== id)
+      )
     }
-  },
+  }
 )
 ```
 
