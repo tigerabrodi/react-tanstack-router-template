@@ -26,6 +26,14 @@ Each domain folder contains `queries.ts`, `mutations.ts`, and `actions.ts` as ne
 
 Convex module filenames must use only letters, numbers, underscores, or periods. Never add hyphens to any file under `convex/`; use underscore names like `schema_core_tables.ts` and `query_planner.ts`.
 
+## Admin components page
+
+`/admin/components` is the index — render a list of cards, one per component being showcased. Each card links into its own dedicated sub-route (e.g. `/admin/components/3d-button`, `/admin/components/loading-screen`).
+
+Do **not** stuff every component showcase into a single long page. Each component gets its own route file under `/admin/components/<name>/route.tsx` so it's easy to navigate, easy to extend, and easy to share a deep link when iterating on a specific component.
+
+The index page (`/admin/components/route.tsx`) is just a card list — title, short description, link.
+
 ## After completing work
 
 Run all three checks after each plan is implemented:
@@ -47,6 +55,10 @@ function getUser({ id }: { id: string }) { ... }
 // Bad
 function getUser(id: string) { ... }
 ```
+
+## CSS collocation
+
+CSS that is specific to a component or route must live in a collocated `.css` file next to the code that uses it — not in the global CSS file. Only truly global styles (resets, CSS variables, base typography, etc.) belong in the global CSS file. If you're writing CSS for a specific area, create or use a `.css` file in that area's directory.
 
 ## Styling and layout conventions
 
@@ -70,6 +82,11 @@ cn('base-class', isActive && 'is-active', isDisabled ? 'is-disabled' : '')
 ## Icons
 
 Icons must live in their own dedicated `.tsx` files. Never inline SVG icons inside component or page files.
+
+## Component separation
+
+- Every component that gets rendered via `.map()` must be extracted into its own `.tsx` file. No inline map rendering of complex JSX.
+- Keep strong separation of concerns — each component owns one visual piece. Split aggressively into small files rather than building large monolithic components.
 
 ## JSX cleanliness
 

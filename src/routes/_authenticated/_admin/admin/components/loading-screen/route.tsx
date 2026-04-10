@@ -1,8 +1,39 @@
+import { createFileRoute, Link } from '@tanstack/react-router'
 import { motion } from 'motion/react'
 import type { ReactNode } from 'react'
 import { useState } from 'react'
 
 // CUSTOMIZE: Replace with your app's loading patterns
+
+export const Route = createFileRoute(
+  '/_authenticated/_admin/admin/components/loading-screen'
+)({
+  component: LoadingScreenShowcasePage,
+})
+
+function LoadingScreenShowcasePage() {
+  return (
+    <div className="flex flex-col gap-8">
+      <div className="flex flex-col gap-2">
+        <Link
+          to="/admin/components"
+          className="text-text-secondary font-body hover:text-text-primary text-[12px] tracking-[0.08em] uppercase transition-colors"
+        >
+          ← Components
+        </Link>
+        <h1 className="font-display text-text-primary text-[32px] leading-[36px]">
+          Loading screen
+        </h1>
+        <p className="text-text-secondary font-body max-w-[680px] text-[15px] leading-6">
+          Three motion directions for loading states. Use these as starting
+          points for your app's loading patterns.
+        </p>
+      </div>
+
+      <LoadingShowcase />
+    </div>
+  )
+}
 
 function Showcase({
   title,
@@ -110,7 +141,7 @@ function LoadingVariationAccentBar() {
   )
 }
 
-function LoadingComponentsShowcase() {
+function LoadingShowcase() {
   return (
     <Showcase
       title="Loading variations"
@@ -134,5 +165,3 @@ function LoadingComponentsShowcase() {
     </Showcase>
   )
 }
-
-export { LoadingComponentsShowcase }
